@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
- 
+
 int main() {
     char caractere;
     FILE *file;
     int n=0;
+    queue<pair<int,int>> coord;
+    stack<pair<int,int>> menorCaminho;
 
     file = fopen("labirinto.txt","r");
     caractere = fgetc(file);
@@ -23,6 +25,7 @@ int main() {
     caractere = fgetc(file);
 
     // Algoritmo que inicia o vetor L com o labirinto, já com a substituição feita e imprime o labirinto presente no arquivo .txt
+    cout << "PRIMEIRA ETAPA" << endl;
     while (caractere != EOF){
         if(caractere == '#'){
             cout << caractere << ' ';
@@ -42,7 +45,6 @@ int main() {
         caractere = fgetc(file);
     }
     //SEGUNDA ETAPA
-    queue<pair<int,int>> coord;
     coord.push({1,1});
     i=2;
     L[1][1]=1;
@@ -68,10 +70,45 @@ int main() {
     }
 
     //Imprime o labirinto
-    cout << endl << endl << endl;
+    cout << endl << endl << endl << "SEGUNDA ETAPA" << endl;
     for(j=0;j<n;j++){
         for(i=0;i<n;i++){
             printf("%3d",L[i][j] );
+        }
+        cout << endl;
+    }
+
+    //TERCEIRA ETAPA
+    menorCaminho.push({n-2,n-2});//Atribuí à pilha as cordenadas da posição final do labirinto
+    while(L[menorCaminho.top().first][menorCaminho.top().second]!= 1){
+        if(L[menorCaminho.top().first-1][menorCaminho.top().second]==L[menorCaminho.top().first][menorCaminho.top().second]-1){
+            menorCaminho.push({menorCaminho.top().first-1,menorCaminho.top().second});//Analizando se a coordenada acima da atual é igual à ela mesma subtraída de 1
+        }
+        if(L[menorCaminho.top().first+1][menorCaminho.top().second]==L[menorCaminho.top().first][menorCaminho.top().second]-1){
+            menorCaminho.push({menorCaminho.top().first+1,menorCaminho.top().second});//Analizando se a coordenada abaixo da atual é igual à ela mesma subtraída de 1
+        }
+        if(L[menorCaminho.top().first][menorCaminho.top().second-1]==L[menorCaminho.top().first][menorCaminho.top().second]-1){
+            menorCaminho.push({menorCaminho.top().first,menorCaminho.top().second-1});//Analizando se a coordenada à esquerda da atual é igual à ela mesma subtraída de 1
+        }
+        if(L[menorCaminho.top().first][menorCaminho.top().second+1]==L[menorCaminho.top().first][menorCaminho.top().second]-1){
+            menorCaminho.push({menorCaminho.top().first,menorCaminho.top().second+1});//Analizando se a coordenada à direita da atual é igual à ela mesma subtraída de 1
+        }
+    }
+
+    //Imprime o labirinto, substituindo os valores antigos pelos caracteres solicitados na ETAPA 3
+    cout << endl << endl << "TERCEIRA ETAPA" << endl;
+    for(j=0;j<n;j++){
+        for(i=0;i<n;i++){
+            if(!menorCaminho.empty() && i==menorCaminho.top().first && j==menorCaminho.top().second){
+                cout << "  x";
+                menorCaminho.pop();
+            }
+            else if(L[i][j]== -1){
+                cout << "  #";
+            }
+            else{
+                cout << "   ";
+            } 
         }
         cout << endl;
     }
