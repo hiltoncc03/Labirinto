@@ -10,7 +10,7 @@ int main() {
 
     file = fopen("labirinto.txt","r");
     caractere = fgetc(file);
-    
+    //teste
     //Conta o número de caracteres em uma linha
     while (caractere != '\n'){
         n++;
